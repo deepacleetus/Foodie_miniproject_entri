@@ -6,6 +6,8 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/Allcategories" element={<Allcategories />} />
+
     </Routes>
   );
 };
