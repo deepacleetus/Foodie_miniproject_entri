@@ -3,6 +3,9 @@ import { MdFreeBreakfast } from "react-icons/md";
 import { LuSoup } from "react-icons/lu";
 import { FaPizzaSlice, FaHamburger } from "react-icons/fa";
 import { FaBowlRice } from "react-icons/fa6";
+import { FaFish } from "react-icons/fa";
+import { GiChickenOven } from "react-icons/gi";
+import { GiBowlOfRice } from "react-icons/gi";
  const Categories=[{
     id:1,
     name:"All",
@@ -13,22 +16,22 @@ import { FaBowlRice } from "react-icons/fa6";
     image:<MdFreeBreakfast />
 },
 {id:3,
-    name:"soup",
-    image:<LuSoup />
+    name:"Pasta",
+    image:<GiBowlOfRice />
 }
 ,
 {id:4,
-    name:"pizza",
-    image:<FaPizzaSlice />
+    name:"Chicken",
+    image:<GiChickenOven />
 }
 ,
 {id:5,
-    name:"Biriyani",
+    name:"Vegetarian",
     image:<FaBowlRice />
 }
 ,
 {id:6,
-    name:"Burger",
-    image:<FaHamburger />
+    name:"Seafood",
+    image:<FaFish />
 }]
 export default Categories
