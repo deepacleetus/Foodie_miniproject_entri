@@ -1,12 +1,22 @@
 import React from "react";
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // ✅ Add this
+import { useNavigate } from "react-router-dom"; 
 import Addtocartcard from "./Addtocartcard";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../redux/cart";
 
 const CartPopup = ({ onClose }) => {
   const { cartList } = useSelector((state) => state.cart);
-  const navigate = useNavigate(); // ✅ useNavigate hook
+  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const handleClearCart = () => {
+ 
+    dispatch(clearCart());
+    
+  
+};
+
 
   const subtotal = cartList.reduce(
     (acc, item) => acc + item.price * item.food_quantity,
@@ -16,21 +26,40 @@ const CartPopup = ({ onClose }) => {
   const gst = subtotal * 0.05;
   const total = subtotal + gst + deliveryCharge;
 
-  // ✅ Handle checkout click
-  const handleCheckout = () => {
-    const orderTime = new Date().toLocaleString(); // get date + time
-    const orderData = {
-      items: cartList,
-      subtotal,
-      deliveryCharge,
-      gst,
-      total,
-      orderTime,
-    };
+  
+ const handleCheckout = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const username = user?.username || "Guest";
 
-    localStorage.setItem("order", JSON.stringify(orderData)); // save to localStorage
-    navigate("/orders"); // go to Order page
+  const orderTime = new Date().toLocaleString();
+  const orderData = {
+    items: cartList,
+    subtotal,
+    deliveryCharge,
+    gst,
+    total,
+    orderTime,
   };
+
+  
+  const newSale = {
+    customer: username,
+    items: cartList,
+    total,
+    date: orderTime,
+  };
+
+  const existingSales = JSON.parse(localStorage.getItem("sales")) || [];
+  const updatedSales = [...existingSales, newSale];
+
+  localStorage.setItem("sales", JSON.stringify(updatedSales)); 
+  localStorage.setItem("order", JSON.stringify(orderData)); 
+  localStorage.removeItem("cart");
+
+  alert("Order placed successfully!");
+  handleClearCart();
+  navigate("/orders"); 
+};
 
   return (
     <div
@@ -41,7 +70,7 @@ const CartPopup = ({ onClose }) => {
         className="w-[400px] h-full bg-white shadow-xl p-5 flex flex-col justify-between overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+       
         <div className="flex justify-between items-center mb-4 border-b pb-2">
           <h2 className="text-xl font-semibold text-gray-700">Your Cart</h2>
           <button onClick={onClose}>
@@ -49,7 +78,7 @@ const CartPopup = ({ onClose }) => {
           </button>
         </div>
 
-        {/* Cart Items */}
+       
         <div className="flex-1 overflow-y-auto">
           {cartList.length > 0 ? (
             <div className="flex flex-col gap-4">
@@ -64,7 +93,7 @@ const CartPopup = ({ onClose }) => {
           )}
         </div>
 
-        {/* Bill Summary */}
+       
         {cartList.length > 0 && (
           <div className="mt-6 bg-gray-50 border-t pt-4 rounded-t-lg">
             <h2 className="text-lg font-semibold text-gray-700 mb-2">
@@ -87,9 +116,14 @@ const CartPopup = ({ onClose }) => {
               <span>Total Payable</span>
               <span>₹{total.toFixed(2)}</span>
             </div>
-
             <button
-              onClick={handleCheckout} // ✅ navigate on click
+                   onClick={handleClearCart}
+                  className="w-full mt-2 bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition"
+                    >
+                   Clear Cart
+                  </button>
+            <button
+              onClick={handleCheckout} 
               className="w-full mt-4 bg-green-600 text-white font-semibold py-2 rounded-lg hover:bg-green-700 transition"
             >
               Proceed to Checkout

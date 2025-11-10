@@ -5,11 +5,11 @@ function LogoutButton() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Remove user data from localStorage
+    
     localStorage.removeItem("user");
     localStorage.removeItem("token");
 
-    // Redirect to login page
+
     navigate("/signin");
   };
 
